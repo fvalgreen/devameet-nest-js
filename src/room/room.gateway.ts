@@ -1,3 +1,4 @@
+import { Position } from './schemas/position.schema';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -12,6 +13,7 @@ import { Server, Socket } from 'socket.io';
 import { JoinRoomDto } from './dtos/joinroom.dto';
 import { UpdateUserPositionDto } from './dtos/updateposition.dto';
 import { toglMuteDto } from './dtos/toglMute.dto';
+import { inRoom } from './dtos/inRoom.dto';
 
 type ActiveSocketType = {
   room: string;
@@ -42,8 +44,12 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
     this.activeSockets = this.activeSockets.filter(
       socket => socket.id !== client.id
     );
-
-    await this.service.deleteUsersPosition(client.id);
+    const dto = {
+      link: existingOnSocket.room,
+      userId: existingOnSocket.userId,
+      inRoom: false
+    } as inRoom;
+    await this.service.deleteUsersPosition(client.id, dto);
 
     client.broadcast.emit(`${existingOnSocket.room}-remove-user`, {socketId: client.id})
 
@@ -61,14 +67,32 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
 
     if (!existingOnSocket) {
       this.activeSockets.push({ room: link, id: client.id, userId });
+      const previousPosition = await this.service.findPreviousUserPosition(link, userId);
+      const usersInRoom = await this.service.listUsersPositionByLink(link);
+
+      let x = 2;
+      let y = 2;
+      if(previousPosition.length > 0){
+        x = previousPosition[0].x;
+        y = previousPosition[0].y;
+      }
 
       const dto = {
         link,
         userId,
-        x: 2,
-        y: 2,
+        x: x,
+        y: y,
         orientation: 'down',
+        inRoom: true,
       } as UpdateUserPositionDto;
+
+      usersInRoom.map(user => {
+        if(user.x === dto.x && user.y === dto.y){
+          dto.x++;
+          dto.y++;
+        }
+      })
+      
 
       await this.service.updateUserPosition(client.id, dto);
 

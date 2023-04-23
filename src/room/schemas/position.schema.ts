@@ -23,16 +23,19 @@ export class Position {
   clientId: string;
 
   @Prop({ required: true })
-  x: Number;
+  x: number;
 
   @Prop({ required: true })
-  y: Number;
+  y: number;
 
   @Prop({ required: true })
   orientation: string;
 
   @Prop({ default: false })
   muted: boolean;
+
+  @Prop({ default: false })
+  inRoom: boolean;
 }
 
 export const PositionSchema = SchemaFactory.createForClass(Position);
