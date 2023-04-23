@@ -46,7 +46,6 @@ export class RoomService {
     return await this.positionModel.find({ meet: meet, inRoom: true });
   }
 
-
   async deleteUsersPosition(clientId: string, dto: inRoom) {
     this.logger.debug(`deleteUsersPosition - ${clientId}`);
     const meet = await this._getMeet(dto.link);
@@ -54,8 +53,6 @@ export class RoomService {
     if (!user) {
       throw new BadRequestException(RoomMessageHelper.JOIN_USER_NOT_VALID);
     }
-
-    console.log(dto)
 
     const positionActual = {
       ...dto,
@@ -66,12 +63,15 @@ export class RoomService {
       avatar: user.avatar,
     };
 
-    const position = await this.positionModel.find(
-      { user: user._id,
-        meet: meet._id,
-      });
-    
-    return await this.positionModel.findByIdAndUpdate(position[0]._id, positionActual)
+    const position = await this.positionModel.find({
+      user: user._id,
+      meet: meet._id,
+    });
+
+    return await this.positionModel.findByIdAndUpdate(
+      position[0]._id,
+      positionActual,
+    );
   }
 
   async updateUserPosition(clientId: string, dto: UpdateUserPositionDto) {
@@ -125,10 +125,10 @@ export class RoomService {
     await this.positionModel.updateMany({ user, meet }, { muted: dto.muted });
   }
 
-  async findPreviousUserPosition(link:string, userId: string){
+  async findPreviousUserPosition(link: string, userId: string) {
     const meet = await this.meetModel.findOne({ link });
 
-    return await this.positionModel.find({meet: meet._id, user: userId});
+    return await this.positionModel.find({ meet: meet._id, user: userId });
   }
 
   async _getMeet(link: string) {
