@@ -36,23 +36,24 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
 
   async handleDisconnect(client: any) {
     const existingOnSocket = this.activeSockets.find(
-      socket => socket.id === client.id
+      (socket) => socket.id === client.id,
     );
 
-    if(!existingOnSocket)return;
+    if (!existingOnSocket) return;
 
     this.activeSockets = this.activeSockets.filter(
-      socket => socket.id !== client.id
+      (socket) => socket.id !== client.id,
     );
     const dto = {
       link: existingOnSocket.room,
       userId: existingOnSocket.userId,
-      inRoom: false
+      inRoom: false,
     } as inRoom;
     await this.service.deleteUsersPosition(client.id, dto);
 
-    client.broadcast.emit(`${existingOnSocket.room}-remove-user`, {socketId: client.id})
-
+    client.broadcast.emit(`${existingOnSocket.room}-remove-user`, {
+      socketId: client.id,
+    });
 
     this.logger.debug(`Client: ${client.id} disconnected`);
   }
@@ -67,12 +68,15 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
 
     if (!existingOnSocket) {
       this.activeSockets.push({ room: link, id: client.id, userId });
-      const previousPosition = await this.service.findPreviousUserPosition(link, userId);
+      const previousPosition = await this.service.findPreviousUserPosition(
+        link,
+        userId,
+      );
       const usersInRoom = await this.service.listUsersPositionByLink(link);
 
       let x = 2;
       let y = 2;
-      if(previousPosition.length > 0){
+      if (previousPosition.length > 0) {
         x = previousPosition[0].x;
         y = previousPosition[0].y;
       }
@@ -86,13 +90,12 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
         inRoom: true,
       } as UpdateUserPositionDto;
 
-      usersInRoom.map(user => {
-        if(user.x === dto.x && user.y === dto.y){
-          dto.x++;
-          dto.y++;
+      usersInRoom.map((user) => {
+        if (user.x === dto.x && user.y === dto.y) {
+          dto.x = Math.floor(Math.random() * 8) + 1;  // Isso impede que nossa posição extrapole a matriz 8x8 definida na regra de negócio 
+          dto.y = Math.floor(Math.random() * 8) + 1;
         }
-      })
-      
+      });
 
       await this.service.updateUserPosition(client.id, dto);
 
@@ -133,19 +136,19 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
 
   @SubscribeMessage('call-user')
   async callUser(client: Socket, data: any) {
-    this.logger.debug(`callUser: ${client.id} to:${data.to}`)
+    this.logger.debug(`callUser: ${client.id} to:${data.to}`);
     client.to(data.to).emit('call-made', {
       offer: data.offer,
-      socket: client.id
+      socket: client.id,
     });
   }
 
   @SubscribeMessage('make-answer')
   async makeAnswer(client: Socket, data: any) {
-    this.logger.debug(`makeAnswer: ${client.id} to:${data.to}`)
+    this.logger.debug(`makeAnswer: ${client.id} to:${data.to}`);
     client.to(data.to).emit('answer-made', {
       answer: data.answer,
-      socket: client.id
+      socket: client.id,
     });
   }
 }
