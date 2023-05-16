@@ -86,7 +86,7 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
         userId,
         x: x,
         y: y,
-        orientation: 'down',
+        orientation: 'front',
         inRoom: true,
       } as UpdateUserPositionDto;
 
