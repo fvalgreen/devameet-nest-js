@@ -16,6 +16,7 @@ export class UserService{
   async create(dto: RegisterDto){
     dto.password = CryptoJS.AES.encrypt(dto.password, process.env.USER_CYPHER_SECRET_KEY).toString();
 
+    dto.email = dto.email.toLowerCase();
     const createdUser = new this.userModel(dto);
 
     await createdUser.save();
@@ -30,6 +31,7 @@ export class UserService{
   }
 
   async getUserByLoginPassword(email: string, password: string) : Promise<UserDocument | null>{
+    email = email.toLowerCase();
     const user = await this.userModel.findOne({email}) as UserDocument;
 
     if(user){

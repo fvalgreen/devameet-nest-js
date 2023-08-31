@@ -32,8 +32,6 @@ export class AuthService {
       name: user.name,
       token: this.jwtService.sign(tokenPayload, {secret: process.env.USER_JWT_SECRET_KEY})
     }
-
-    return dto;
   };
 
   async register(dto: RegisterDto){
