@@ -81,6 +81,11 @@ export class RoomGateway implements OnGatewayInit, OnGatewayDisconnect {
         y = previousPosition[0].y;
       }
 
+
+
+
+
+      
       const dto = {
         link,
         userId,
