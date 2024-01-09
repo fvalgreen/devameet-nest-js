@@ -41,3 +41,4 @@ lerna-debug.log*
 .env.dev
 .env.hml
 .env.prod
+.vercel
