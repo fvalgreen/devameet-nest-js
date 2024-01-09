@@ -8,8 +8,8 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    "origin": "*",
-    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE"
+    "origin": ["*"],
+    "methods": ["GET","HEAD","PUT","POST","DELETE"]
   });
 
   app.useGlobalPipes(
