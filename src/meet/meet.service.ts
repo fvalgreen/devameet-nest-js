@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Meet, MeetDocument } from './schemas/meet.schema';
 import { Model } from 'mongoose';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { GetMeetDto } from './dtos/getmeet.dto';
 import { CreateMeetDto } from './dtos/createmeet.dto';
 import { generateLink } from './helpers/linkgenerator.helper';

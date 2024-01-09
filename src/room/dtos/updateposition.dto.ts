@@ -1,7 +1,7 @@
 import { IsBoolean, IsNumber, IsString, Max, Min } from 'class-validator';
 
 import { JoinRoomDto } from './joinroom.dto';
-import { MeetMessagesHelper } from 'src/meet/helpers/meetmessages.helper';
+import { MeetMessagesHelper } from '../../meet/helpers/meetmessages.helper';
 
 export class UpdateUserPositionDto extends JoinRoomDto {
   @IsNumber({}, { message: MeetMessagesHelper.UPDATE_XY_NOT_VALID })
