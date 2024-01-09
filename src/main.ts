@@ -7,7 +7,11 @@ async function bootstrap() {
     logger: ['debug', 'error', 'log', 'warn']
   });
 
-  app.enableCors();
+  app.enableCors({
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "optionsSuccessStatus": 200
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
