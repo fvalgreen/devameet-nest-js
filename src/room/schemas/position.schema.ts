@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Meet } from 'src/meet/schemas/meet.schema';
-import { User } from 'src/user/schemas/user.schema';
+import { Meet } from '../../meet/schemas/meet.schema';
+import { User } from '../../user/schemas/user.schema';
 
 export type PositionDocument = HydratedDocument<Position>;
 
