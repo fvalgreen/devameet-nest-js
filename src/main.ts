@@ -9,7 +9,7 @@ async function bootstrap() {
 
   app.enableCors({
     "origin": ["*"],
-    "methods": ["GET","HEAD","PUT","POST","DELETE"]
+    "methods": ["GET","HEAD","PUT","POST","DELETE", "OPTIONS"]
   });
 
   app.useGlobalPipes(
