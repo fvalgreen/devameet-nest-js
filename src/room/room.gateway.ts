@@ -22,7 +22,7 @@ type ActiveSocketType = {
 };
 
 @WebSocketGateway({ cors: {
-  origin: ["*"],
+  origin: ["http://localhost:5173"],
   credentials: true,
 },
 transports: ['websocket', 'polling'],
